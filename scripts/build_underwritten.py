@@ -78,6 +78,11 @@ def comp_num(s, kind):
     return (v / 100 if kind == "pct" else v), eu
 CITIES = ["Gallatin Gateway", "Big Sky", "Bozeman", "Belgrade", "Manhattan", "Livingston", "Emigrant", "Pray", "Gardiner", "Three Forks", "Four Corners"]
 TEMPLATE_DIR = ROOT / "underwriting" / "template"
+# The setup lines every sheet carries, at Galveston file 101's amounts (as js/underwritten/uw-rules.js
+# STANDARD_SETUP): a new listing from the blank template starts with these; "row" is the slot (0 = row 5).
+STANDARD_SETUP = [{"label": "Furniture / Decor / Essentials", "amount": 50000, "row": 0}, {"label": "Misc", "amount": 25000, "row": 11},
+                  {"label": "CoHost Essentials", "amount": 3500, "row": 12}, {"label": "Design/Project Management", "amount": 25000, "row": 13},
+                  {"label": "Install/Staging/Warehousing", "amount": 18250, "row": 14}]
 MIN_REV = 90000  # default revenue floor for Match by location: Galveston's $90k, also the Montana discovery's high-revenue line
 
 
@@ -919,8 +924,8 @@ for p in properties:
 # New-listing templates (underwriting/template/): the sheet a new listing starts from. Only the
 # layout and the team's financing and tax assumptions carry over (down payment, rate, closing,
 # amortization, OPEX range, PM fee, appreciation, land / bonus / tax rate). The template is a
-# sheet from another market (Island Park file 112), so its setup items, OPEX amounts and cleaning cost are left blank for
-# this market's numbers; OPEX keeps its line labels.
+# sheet from another market (Island Park file 112), so its own setup items, OPEX amounts and cleaning cost are left blank for
+# this market's numbers (the five standard setup lines stay); OPEX keeps its line labels.
 templates = []
 for tp in sorted(TEMPLATE_DIR.glob("*.csv")):
     t = parse_sheet(tp)
@@ -928,7 +933,7 @@ for tp in sorted(TEMPLATE_DIR.glob("*.csv")):
         if "European number format" not in iss:  # the template's own comp rows never reach a new listing
             validation["parse"].append({"file": "template/" + tp.name, "issue": iss})
     ti = t["inputs"]
-    neutral = dict(ti, price=None, setup=[], revenue={"low": None, "mid": None, "high": None}, cleaningCost=None, cleaningTurns=None,
+    neutral = dict(ti, price=None, setup=[dict(x) for x in STANDARD_SETUP], revenue={"low": None, "mid": None, "high": None}, cleaningCost=None, cleaningTurns=None,
                    opex=[dict(o, amount=None) for o in ti["opex"]])
     templates.append({"file": tp.name, "path": "underwriting/template/" + tp.name, "label": "template", "street": "Blank sheet",
                       "kept": {k: ti[k] for k in ("dpPct", "rate", "closingPct", "mortgageYears", "amortYears", "opexRangePct", "pmPct", "apprPct",

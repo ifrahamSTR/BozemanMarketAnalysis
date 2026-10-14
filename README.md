@@ -44,9 +44,11 @@ Findings:
 
    Until this market has its own sheets, new listings start from `underwriting/template/UW'ing - template (from Island Park 112).csv`:
    - only the financing and tax assumptions carry over;
-   - setup, OPEX amounts, cleaning and revenue start blank;
+   - setup starts with the five standard lines (see below); OPEX amounts, cleaning and revenue start blank;
    - returns stay blank until some OPEX is entered;
    - the comp columns are the newer layout (Firepit / Outdoor Dining / Pack and Play).
 4. Browser test: `NODE_PATH=<playwright-core node_modules> node tests/test_underwritten_browser.mjs`.
 
 Match by location keeps to the target's area, with bedrooms ±1, revenue $90k+ (69 of the 419 homes) and nearest first.
+
+**Standard setup lines (2026-10-14):** every new underwriting sheet made on the page carries the five lines every "UW'ing" sheet has, in their usual rows: Furniture / Decor / Essentials (row 5), Misc, CoHost Essentials, Design/Project Management and Install/Staging/Warehousing (rows 16–19). A line that is missing or has no amount gets Galveston file 101's amount ($50,000 / $25,000 / $3,500 / $25,000 / $18,250); a line the starting sheet already prices keeps its own amount. Rule: `UWRules.withStandardSetup` in `js/underwritten/uw-rules.js`, applied when a listing is created and whenever a new-listing sheet is shown or downloaded.
