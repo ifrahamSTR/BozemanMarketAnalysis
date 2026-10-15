@@ -60,7 +60,9 @@
     const meets = uwCards.filter((c) => st(c.cases.low.coc) === "good").length;
     const screen = uwCards.filter((c) => c.price && ok(c.rev.mid) && c.rev.mid / c.price >= 0.2).length;
     const lede = document.getElementById("uwx-lede");
-    if (lede) lede.innerHTML = "<strong>" + uwCards.length + " acquisition targets</strong> underwritten so far. " + meets + " of " + uwCards.length + " meet the 4% low-case cash-on-cash target, and " + screen +
+    if (lede && !uwCards.length) lede.innerHTML = "<strong>No targets underwritten here yet.</strong> " + (cards.length ? cards.length + " new listing" + (cards.length === 1 ? "" : "s") + " added on the map so far. " : "") +
+      "Open the underwriting map to add a Zillow listing, rank its nearest $90k+ Airbnb comps and build its comp set. New sheets start with the standard setup and OPEX lines.";
+    else if (lede) lede.innerHTML = "<strong>" + uwCards.length + " acquisition targets</strong> underwritten so far. " + meets + " of " + uwCards.length + " meet the 4% low-case cash-on-cash target, and " + screen +
       " pass the 20% revenue-to-price screen in the mid case. Pick one to open it on the map with its nearest $90k+ Airbnb comps, its comp set and the full underwriting.";
     const nErr = cards.reduce((s, c) => s + (c.errors || 0), 0);
     if (lede && nErr) lede.innerHTML += " " + nErr + " comp rows across the sheets are not valid comps (see Data checks).";

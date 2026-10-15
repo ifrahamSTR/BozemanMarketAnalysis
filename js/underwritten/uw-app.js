@@ -20,7 +20,7 @@
 /* global UWMath, UWGeo, UWCsv, UWRules */
 (function () {
   const UW = (window.UW = {});
-  UW.VERSION = "20261015-bz3";
+  UW.VERSION = "20261015-bz4";
   const LS_KEY = "bozemanUW.v1";
 
   // ---------------------------------------------------------------------------
